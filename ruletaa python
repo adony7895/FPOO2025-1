@@ -1,0 +1,91 @@
+import random
+
+# Inicializar datos del jugador
+jugador = {
+    "coins": 100,
+    "apuestas_realizadas": 0,
+    "cantidad_apostada": 0,
+    "cantidad_ganada": 0
+}
+
+# Función para realizar apuestas
+def realizar_apuesta(jugador):
+    print(f"\nSaldo actual: {jugador['coins']} coins")
+    tipo_apuesta = input("Tipo de apuesta (número/sección/color): ").strip().lower()
+
+    if tipo_apuesta not in ["número", "sección", "color"]:
+        print("Tipo de apuesta no válido. Inténtelo de nuevo.")
+        return
+
+    apuesta = int(input("Cantidad a apostar: "))
+
+    if apuesta > jugador["coins"]:
+        print("No tienes suficientes coins para esta apuesta. Inténtelo de nuevo.")
+        return
+
+    jugador["coins"] -= apuesta
+    jugador["cantidad_apostada"] += apuesta
+    jugador["apuestas_realizadas"] += 1
+
+    if tipo_apuesta == "número":
+        numero_elegido = int(input("Elige un número entre 1 y 36: "))
+        numero_ruleta = random.randint(1, 36)
+        if numero_elegido == numero_ruleta:
+            ganancias = apuesta * 20
+            jugador["coins"] += ganancias
+            jugador["cantidad_ganada"] += ganancias
+            print(f"¡Acertaste! Ganaste {ganancias} coins.")
+        else:
+            print(f"No acertaste. El número de la ruleta era {numero_ruleta}.")
+    
+    elif tipo_apuesta == "sección":
+        seccion_elegida = int(input("Elige una sección (1, 2, o 3): "))
+        seccion_ruleta = random.randint(1, 3)
+        if seccion_elegida == seccion_ruleta:
+            ganancias = apuesta * 5
+            jugador["coins"] += ganancias
+            jugador["cantidad_ganada"] += ganancias
+            print(f"¡Acertaste! Ganaste {ganancias} coins.")
+        else:
+            print(f"No acertaste. La sección de la ruleta era {seccion_ruleta}.")
+    
+    elif tipo_apuesta == "color":
+        color_elegido = input("Elige un color (rojo/negro): ").strip().lower()
+        color_ruleta = random.choice(["rojo", "negro"])
+        if color_elegido == color_ruleta:
+            ganancias = apuesta * 2
+            jugador["coins"] += ganancias
+            jugador["cantidad_ganada"] += ganancias
+            print(f"¡Acertaste! Ganaste {ganancias} coins.")
+        else:
+            print(f"No acertaste. El color de la ruleta era {color_ruleta}.")
+
+# Función para mostrar estadísticas
+def mostrar_estadisticas(jugador):
+    print("\n--- Estadísticas del jugador ---")
+    print(f"Saldo total disponible: {jugador['coins']} coins")
+    print(f"Cantidad total apostada: {jugador['cantidad_apostada']} coins")
+    print(f"Cantidad total ganada: {jugador['cantidad_ganada']} coins")
+    if jugador["apuestas_realizadas"] > 0:
+        exito_promedio = jugador["cantidad_ganada"] / jugador["cantidad_apostada"]
+        print(f"Promedio de éxito: {exito_promedio:.2f}")
+    else:
+        print("Aún no has realizado apuestas.")
+
+# Bucle principal del programa
+while True:
+    print("\n--- Menú de la Ruleta ---")
+    print("1. Realizar apuesta")
+    print("2. Consultar estadísticas")
+    print("3. Salir")
+    opcion = input("Elige una opción: ").strip()
+
+    if opcion == "1":
+        realizar_apuesta(jugador)
+    elif opcion == "2":
+        mostrar_estadisticas(jugador)
+    elif opcion == "3":
+        print("Gracias por jugar. ¡Hasta luego!")
+        break
+    else:
+        print("Opción no válida. Inténtelo de nuevo.")
